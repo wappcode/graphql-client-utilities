@@ -1,0 +1,13 @@
+{
+  "name": "graphql-client-utilities",
+  "version": "0.0.1",
+  "description": "Utilidades para consultas grapql desde el navegador",
+  "scripts": {},
+  "license": "ISC",
+  "main": ".",
+  "module": ".",
+  "typings": "graphqlutilities.d.ts",
+  "exports": {
+    ".": "./gqlutilities.js"
+  }
+}
