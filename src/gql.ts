@@ -1,4 +1,4 @@
-import { GQLTagData } from './types';
+import { GQLRequestBody, GQLTagData } from './types';
 
 const extractOperationName = (query: string): string => {
   let queryBase = query.replace('query', '');
@@ -25,4 +25,24 @@ export const gqltag = (
     operationName,
   };
   return result;
+};
+
+export const executeQuery = (
+  uri: string,
+  { query, operationName }: GQLTagData,
+  variables?: any,
+  requestInit?: RequestInit | undefined
+): Promise<any> => {
+  const method = 'POST';
+  let options: RequestInit = requestInit ?? {};
+  let headers: HeadersInit = requestInit?.headers ?? {};
+
+  const body: GQLRequestBody = {
+    query,
+    variables,
+    operationName,
+  };
+  headers = { ...headers, 'Content-Type': 'application/json' };
+  options = { ...options, headers, body: JSON.stringify(body) };
+  return fetch(uri, options).then((response) => response.json());
 };

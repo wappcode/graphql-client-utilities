@@ -1,4 +1,4 @@
-import { gqltag } from './gql';
+import { executeQuery, gqltag } from './gql';
 
 describe('Graphql Tag', () => {
   test('Validando query string', () => {
