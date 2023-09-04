@@ -34,7 +34,9 @@ export const executeQuery = (
   requestInit?: RequestInit | undefined
 ): Promise<any> => {
   const method = 'POST';
-  let options: RequestInit = requestInit ?? {};
+  const basicOptions: RequestInit = { method };
+  const initOptions: RequestInit = requestInit ?? {};
+  let options = { ...basicOptions, ...initOptions };
   let headers: HeadersInit = requestInit?.headers ?? {};
 
   const body: GQLRequestBody = {

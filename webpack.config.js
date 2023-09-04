@@ -5,11 +5,20 @@ module.exports = {
   mode: 'production',
   devtool: 'source-map',
   entry: {
-    gqlutilities: {
-      import: './public/graphqlutilities.ts',
+    graphqlutilities: {
+      import: './src/graphqlutilities.ts',
       library: {
         // all options under `output.library` can be used here
-        name: 'gqlutilities',
+        name: 'gql',
+        type: 'umd',
+        umdNamedDefine: true,
+      },
+    },
+    gql: {
+      import: './src/gql.ts',
+      library: {
+        // all options under `output.library` can be used here
+        name: 'gql',
         type: 'umd',
         umdNamedDefine: true,
       },

@@ -8,6 +8,7 @@
   "module": ".",
   "typings": "graphqlutilities.d.ts",
   "exports": {
-    ".": "./gqlutilities.js"
+    ".": "./graphqlutilities.js",
+    "./gql": "./gql.js"
   }
 }
