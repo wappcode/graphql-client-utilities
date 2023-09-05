@@ -23,6 +23,15 @@ module.exports = {
         umdNamedDefine: true,
       },
     },
+    types: {
+      import: './src/types.ts',
+      library: {
+        // all options under `output.library` can be used here
+        name: 'types',
+        type: 'umd',
+        umdNamedDefine: true,
+      },
+    },
   },
   module: {
     rules: [
