@@ -30,6 +30,70 @@ export interface GQLPaginationInput {
   last?: number;
   before?: string;
 }
+
+export enum GQLFilterLogic {
+  AND = 'AND',
+  OR = 'OR',
+}
+
+export enum GQLFIlterOperator {
+  EQUAL = 'EQUAL',
+  NOT_EQUAL = 'NOT_EQUAL',
+  BETWEEN = 'BETWEEN',
+  GREATER_THAN = 'GREATER_THAN',
+  LESS_THAN = 'LESS_THAN',
+  GREATER_EQUAL_THAN = 'GREATER_EQUAL_THAN',
+  LESS_EQUAL_THAN = 'LESS_EQUAL_THAN',
+  LIKE = 'LIKE',
+  NOT_LIKE = 'NOT_LIKE',
+  IN = 'IN',
+  NOT_IN = 'NOT_IN',
+}
+
+export interface GQLFilterValue {
+  single?: string;
+  many?: string[];
+}
+export interface GQLFilterConditionInput {
+  filterOperator: GQLFIlterOperator;
+  property: string;
+  value: GQLFilterValue;
+  onJoinedProperty: string;
+}
+export interface GQLFilterGroupInput {
+  groupLogic?: GQLFilterLogic;
+  conditionsLogic?: GQLFilterLogic;
+  conditions: GQLFilterConditionInput;
+}
+export enum GQLSortDirection {
+  ASC = 'ASC',
+  DESC = 'DESC',
+}
+export interface GQLSortGroupInput {
+  property: string;
+  direction?: GQLSortDirection;
+  onJoinedProperty: string;
+}
+export enum GQLJoinType {
+  INNER = 'INNER',
+  LEFT = 'LEFT',
+  RIGHT = 'RIGHT',
+  FULL_OUTER = 'FULL_OUTER',
+}
+export interface GQLJoinInput {
+  property: string;
+  joinType: GQLJoinType;
+  joinedProperty: string;
+  alias: string;
+}
+
+export interface GQLConnectionInput {
+  pagination?: GQLPaginationInput;
+  filters?: GQLFilterGroupInput[];
+  sorts?: GQLSortGroupInput[];
+  joins?: GQLJoinInput[];
+}
+
 /**
  * @template T Tipo de resultado de la consulta.
  * @template E Tipo de error de la consulta.
