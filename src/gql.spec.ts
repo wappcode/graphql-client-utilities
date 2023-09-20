@@ -24,4 +24,9 @@ describe('Graphql Tag', () => {
     const result = gqltag`  mutation   MutationTest($id:ID!){}`;
     expect(result.operationName).toEqual('MutationTest');
   });
+
+  test('validando fragment operation name', () => {
+    const result = gqltag`fragment fragmentNameTest on Profile {}`;
+    expect(result.operationName).toEqual('fragmentNameTest');
+  });
 });

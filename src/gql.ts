@@ -4,11 +4,13 @@ import {
   GQLRequestBody,
   GQLResult,
   GQLTagData,
+  QueryExecutor,
 } from './types';
 
 const extractOperationName = (query: string): string => {
   let queryBase = query.replace('query', '');
   queryBase = queryBase.replace('mutation', '');
+  queryBase = queryBase.replace('fragment', '');
   queryBase = queryBase.trim();
   const regexp = new RegExp(/^(\w+)[\s\(\{}]/);
   const matches = regexp.exec(queryBase) ?? [];
@@ -64,6 +66,23 @@ export const executeQuery = <T = any, V = any, E = any>(
   headers = { ...headers, 'Content-Type': 'application/json' };
   options = { ...options, headers, body: JSON.stringify(body) };
   return fetch(uri, options).then((response) => response.json());
+};
+
+/**
+ *
+ * @param uri
+ * @param requestInit
+ * @returns
+ */
+export const createQueryExecutor = (
+  uri: string,
+  requestInit?: RequestInit | undefined
+): QueryExecutor => {
+  return <T = any, V = any, E = any>(
+    tagData: GQLTagData,
+    variables?: V
+  ): Promise<GQLResult<T, E>> =>
+    executeQuery(uri, tagData, variables, requestInit);
 };
 
 export const extractNodesFromConnection = <T>(

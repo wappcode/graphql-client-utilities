@@ -93,7 +93,6 @@ export interface GQLConnectionInput {
   sorts?: GQLSortGroupInput[];
   joins?: GQLJoinInput[];
 }
-
 /**
  * @template T Tipo de resultado de la consulta.
  * @template E Tipo de error de la consulta.
@@ -102,3 +101,8 @@ export declare type GQLResult<T = any, E = any> = {
   data: T;
   errors?: E[];
 };
+
+export type QueryExecutor = <T = any, V = any, E = any>(
+  tagData: GQLTagData,
+  variables?: V
+) => Promise<GQLResult<T, E>>;
