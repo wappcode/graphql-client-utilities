@@ -1,4 +1,4 @@
-export interface GQLTagData {
+export interface GQLQueryObject {
   query: string;
   operationName?: string;
 }
@@ -103,6 +103,6 @@ export declare type GQLResult<T = any, E = any> = {
 };
 
 export type QueryExecutor = <T = any, V = any, E = any>(
-  tagData: GQLTagData,
+  tagData: GQLQueryObject,
   variables?: V
 ) => Promise<GQLResult<T, E>>;

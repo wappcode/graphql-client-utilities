@@ -4,3 +4,4 @@ node_modules/
 *.zip
 test-pack/node_modules
 .DS_Store
+*.tgz

@@ -3,8 +3,9 @@ import {
   GQLEdge,
   GQLRequestBody,
   GQLResult,
-  GQLTagData,
+  GQLQueryObject,
   QueryExecutor,
+  GQLJoinType,
 } from './types';
 
 const extractOperationName = (query: string): string => {
@@ -18,17 +19,25 @@ const extractOperationName = (query: string): string => {
   return operationName.trim();
 };
 
-export const gqltag = (
+export const gqlparse = (
   strings: TemplateStringsArray,
   ...args: any
-): GQLTagData => {
+): GQLQueryObject => {
   let query = '';
   for (let i = 0; i < strings.length; i++) {
     query += strings[i];
-    query += args[i] ?? '';
+    if(args[i] && typeof args[i] == "object" && typeof args[i].query == 'string') {
+      query += args[i].query
+    } else if(args[i] && typeof args[i] == "object" && typeof args[i].loc?.source.body == "string") { 
+      query += args[i].loc.source.body
+    }
+    else {
+      query += args[i] ?? '';
+
+    }
   }
   const operationName = extractOperationName(query);
-  const result: GQLTagData = {
+  const result: GQLQueryObject = {
     query,
     operationName,
   };
@@ -37,7 +46,7 @@ export const gqltag = (
 /**
  *
  * @param uri
- * @param tagData GQLTagData
+ * @param queryData queryData
  * @param variables
  * @param requestInit
  * @template T Tipo de resultado de la consulta.
@@ -47,12 +56,27 @@ export const gqltag = (
  */
 export const executeQuery = <T = any, V = any, E = any>(
   uri: string,
-  tagData: GQLTagData,
+  queryData: GQLQueryObject | {loc?:{source:{body:string}}} | string,
   variables?: V,
   requestInit?: RequestInit | undefined
 ): Promise<GQLResult<T, E>> => {
   const method = 'POST';
-  const { query, operationName } = tagData;
+  let query, operationName;
+  let queryDataGQL: {loc?:{body:string}} = queryData as {loc?:{body:string}};
+  let queryDataSTR: string = queryData as string;
+  let queryDataObj: GQLQueryObject = queryData as GQLQueryObject;
+  if(queryDataGQL.loc)  {
+    const data = gqlparse`${queryDataGQL.loc.body}`;
+    query = data.query;
+    operationName = data.operationName;
+  } else if (typeof queryDataSTR === 'string') {
+    const data = gqlparse`${queryDataSTR}`;
+    query = data.query;
+    operationName = data.operationName;
+  } else {
+    query = queryDataObj.query;
+    operationName = queryDataObj.operationName
+  }
   const basicOptions: RequestInit = { method };
   const initOptions: RequestInit = requestInit ?? {};
   let options = { ...basicOptions, ...initOptions };
@@ -79,10 +103,10 @@ export const createQueryExecutor = (
   requestInit?: RequestInit | undefined
 ): QueryExecutor => {
   return <T = any, V = any, E = any>(
-    tagData: GQLTagData,
+    queryData: GQLQueryObject,
     variables?: V
   ): Promise<GQLResult<T, E>> =>
-    executeQuery(uri, tagData, variables, requestInit);
+    executeQuery(uri, queryData, variables, requestInit);
 };
 
 export const extractNodesFromConnection = <T>(
@@ -101,7 +125,7 @@ export const extractNodesFromConnection = <T>(
  * @param customFn
  * @returns
  */
-export const standardizeConnectionCustomFunction = <T>(
+export const standardizeConnectionNodesCustomFunction = <T>(
   connection: GQLConnection<T>,
   customFn: (e: T) => T
 ): GQLConnection<T> => {
