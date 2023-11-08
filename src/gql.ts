@@ -5,7 +5,7 @@ import {
   GQLResult,
   GQLQueryObject,
   QueryExecutor,
-  GQLJoinType,
+  GQLQueryData,
 } from './types';
 
 const extractOperationName = (query: string): string => {
@@ -56,17 +56,17 @@ export const gqlparse = (
  */
 export const executeQuery = <T = any, V = any, E = any>(
   uri: string,
-  queryData: GQLQueryObject | {loc?:{source:{body:string}}} | string,
+  queryData: GQLQueryData,
   variables?: V,
   requestInit?: RequestInit | undefined
 ): Promise<GQLResult<T, E>> => {
   const method = 'POST';
   let query, operationName;
-  let queryDataGQL: {loc?:{body:string}} = queryData as {loc?:{body:string}};
+  let queryDataGQL: {loc?:{source:{body:string}}} = queryData as {loc?:{source:{body:string}}};
   let queryDataSTR: string = queryData as string;
   let queryDataObj: GQLQueryObject = queryData as GQLQueryObject;
   if(queryDataGQL.loc)  {
-    const data = gqlparse`${queryDataGQL.loc.body}`;
+    const data = gqlparse`${queryDataGQL.loc.source.body}`;
     query = data.query;
     operationName = data.operationName;
   } else if (typeof queryDataSTR === 'string') {
@@ -103,7 +103,7 @@ export const createQueryExecutor = (
   requestInit?: RequestInit | undefined
 ): QueryExecutor => {
   return <T = any, V = any, E = any>(
-    queryData: GQLQueryObject,
+    queryData: GQLQueryData,
     variables?: V
   ): Promise<GQLResult<T, E>> =>
     executeQuery(uri, queryData, variables, requestInit);

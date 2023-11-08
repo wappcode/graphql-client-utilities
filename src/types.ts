@@ -102,7 +102,9 @@ export declare type GQLResult<T = any, E = any> = {
   errors?: E[];
 };
 
+export type GQLQueryData =  GQLQueryObject | string | {loc?:{source:{body:string}}}
+
 export type QueryExecutor = <T = any, V = any, E = any>(
-  tagData: GQLQueryObject,
+  queryData: GQLQueryData,
   variables?: V
 ) => Promise<GQLResult<T, E>>;
