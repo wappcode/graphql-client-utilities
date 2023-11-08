@@ -1,6 +1,7 @@
 import gql from 'graphql-tag';
 import { executeQuery, gqlparse } from './gql';
-
+import {GQLResult} from './types';
+import fetch from 'jest-fetch-mock';
 describe('Graphql Tag', () => {
   test('Validando query string', () => {
     const queryString = `
@@ -82,4 +83,17 @@ describe('Graphql Tag', () => {
     const queryString = query.loc && query.loc?.source.body;
     expect(typeof queryString).toEqual('string');
   });
+
+  test('probando executeQuery', async () => {
+    const query = gql`
+    query QueryX{
+      id
+    }
+  `;
+  const response: GQLResult = {data:{query: query.loc?.source.body}}
+  
+  fetch.mockResponseOnce(JSON.stringify(response))
+  const resutl = await executeQuery("http://localhost:8080",query)
+  expect(resutl.data.query.includes("QueryX")).toBeTruthy();
+  })
 });
