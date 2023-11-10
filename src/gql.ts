@@ -6,6 +6,7 @@ import {
   GQLQueryObject,
   QueryExecutor,
   GQLQueryData,
+  GQLFetchFunction,
 } from './types';
 
 const extractOperationName = (query: string): string => {
@@ -81,8 +82,10 @@ export const executeQuery = <T = any, V = any, E = any>(
   uri: string,
   queryData: GQLQueryData,
   variables?: V,
+  fetchFunction?: GQLFetchFunction,
   requestInit?: RequestInit | undefined
 ): Promise<GQLResult<T, E>> => {
+  const fetchFn = fetchFunction ?? fetch;
   const method = 'POST';
   const queryObject = queryDataToQueryObject(queryData);
   const { query, operationName } = queryObject;
@@ -98,7 +101,7 @@ export const executeQuery = <T = any, V = any, E = any>(
   };
   headers = { ...headers, 'Content-Type': 'application/json' };
   options = { ...options, headers, body: JSON.stringify(body) };
-  return fetch(uri, options).then((response) => response.json());
+  return fetchFn(uri, options).then((response) => response.json());
 };
 
 /**
@@ -109,13 +112,14 @@ export const executeQuery = <T = any, V = any, E = any>(
  */
 export const createQueryExecutor = (
   uri: string,
+  fetchFunction?: GQLFetchFunction,
   requestInit?: RequestInit | undefined
 ): QueryExecutor => {
   return <T = any, V = any, E = any>(
     queryData: GQLQueryData,
     variables?: V
   ): Promise<GQLResult<T, E>> =>
-    executeQuery(uri, queryData, variables, requestInit);
+    executeQuery(uri, queryData, variables, fetchFunction, requestInit);
 };
 
 export const extractNodesFromConnection = <T>(
