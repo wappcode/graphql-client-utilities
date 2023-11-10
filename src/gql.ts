@@ -19,6 +19,23 @@ const extractOperationName = (query: string): string => {
   return operationName.trim();
 };
 
+export const queryDataToQueryObject = (data: GQLQueryData): GQLQueryObject => {
+  let queryObject: GQLQueryObject;
+  let queryDataGQL: { loc?: { source: { body: string } } } = data as {
+    loc?: { source: { body: string } };
+  };
+  let dataSTR: string = data as string;
+  let dataObj: GQLQueryObject = data as GQLQueryObject;
+  if (queryDataGQL.loc) {
+    queryObject = gqlparse`${queryDataGQL.loc.source.body}`;
+  } else if (typeof dataSTR === 'string') {
+    queryObject = gqlparse`${dataSTR}`;
+  } else {
+    queryObject = { ...dataObj };
+  }
+  return queryObject;
+};
+
 export const gqlparse = (
   strings: TemplateStringsArray,
   ...args: any
@@ -26,14 +43,20 @@ export const gqlparse = (
   let query = '';
   for (let i = 0; i < strings.length; i++) {
     query += strings[i];
-    if(args[i] && typeof args[i] == "object" && typeof args[i].query == 'string') {
-      query += args[i].query
-    } else if(args[i] && typeof args[i] == "object" && typeof args[i].loc?.source.body == "string") { 
-      query += args[i].loc.source.body
-    }
-    else {
+    if (
+      args[i] &&
+      typeof args[i] == 'object' &&
+      typeof args[i].query == 'string'
+    ) {
+      query += args[i].query;
+    } else if (
+      args[i] &&
+      typeof args[i] == 'object' &&
+      typeof args[i].loc?.source.body == 'string'
+    ) {
+      query += args[i].loc.source.body;
+    } else {
       query += args[i] ?? '';
-
     }
   }
   const operationName = extractOperationName(query);
@@ -61,22 +84,8 @@ export const executeQuery = <T = any, V = any, E = any>(
   requestInit?: RequestInit | undefined
 ): Promise<GQLResult<T, E>> => {
   const method = 'POST';
-  let query, operationName;
-  let queryDataGQL: {loc?:{source:{body:string}}} = queryData as {loc?:{source:{body:string}}};
-  let queryDataSTR: string = queryData as string;
-  let queryDataObj: GQLQueryObject = queryData as GQLQueryObject;
-  if(queryDataGQL.loc)  {
-    const data = gqlparse`${queryDataGQL.loc.source.body}`;
-    query = data.query;
-    operationName = data.operationName;
-  } else if (typeof queryDataSTR === 'string') {
-    const data = gqlparse`${queryDataSTR}`;
-    query = data.query;
-    operationName = data.operationName;
-  } else {
-    query = queryDataObj.query;
-    operationName = queryDataObj.operationName
-  }
+  const queryObject = queryDataToQueryObject(queryData);
+  const { query, operationName } = queryObject;
   const basicOptions: RequestInit = { method };
   const initOptions: RequestInit = requestInit ?? {};
   let options = { ...basicOptions, ...initOptions };

@@ -43,12 +43,12 @@ module.exports = {
     ],
   },
   plugins: [
-    new CopyPlugin({
-      patterns: [
-        { from: 'src/package.json', to: 'src' },
-        { from: 'README.md', to: 'src' },
-      ],
-    }),
+    // new CopyPlugin({
+    //   patterns: [
+    //     { from: 'src/package.json', to: 'src' },
+    //     { from: 'README.md', to: 'src' },
+    //   ],
+    // }),
   ],
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
