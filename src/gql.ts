@@ -69,7 +69,7 @@ export const gqlparse = (
 };
 /**
  *
- * @param uri
+ * @param url
  * @param queryData queryData
  * @param variables
  * @param requestInit
@@ -79,7 +79,7 @@ export const gqlparse = (
  * @returns
  */
 export const executeQuery = <T = any, V = any, E = any>(
-  uri: string,
+  url: string,
   queryData: GQLQueryData,
   variables?: V,
   fetchFunction?: GQLFetchFunction,
@@ -101,17 +101,17 @@ export const executeQuery = <T = any, V = any, E = any>(
   };
   headers = { ...headers, 'Content-Type': 'application/json' };
   options = { ...options, headers, body: JSON.stringify(body) };
-  return fetchFn(uri, options).then((response) => response.json());
+  return fetchFn(url, options).then((response) => response.json());
 };
 
 /**
  *
- * @param uri
+ * @param url
  * @param requestInit
  * @returns
  */
 export const createQueryExecutor = (
-  uri: string,
+  url: string,
   fetchFunction?: GQLFetchFunction,
   requestInit?: RequestInit | undefined
 ): QueryExecutor => {
@@ -119,7 +119,7 @@ export const createQueryExecutor = (
     queryData: GQLQueryData,
     variables?: V
   ): Promise<GQLResult<T, E>> =>
-    executeQuery(uri, queryData, variables, fetchFunction, requestInit);
+    executeQuery(url, queryData, variables, fetchFunction, requestInit);
 };
 
 export const extractNodesFromConnection = <T>(
@@ -133,19 +133,29 @@ export const extractNodesFromConnection = <T>(
 };
 
 /**
- * Estandariza los nodos de la conexion utilizando la función pasada como argumento
+ * Transforma los nodos de la conexion utilizando la función pasada como argumento
  * @param connection
- * @param customFn
+ * @param mapFn
  * @returns
  */
-export const standardizeConnectionNodesCustomFunction = <T>(
+export const mapConnectionNodes = <T>(
   connection: GQLConnection<T>,
-  customFn: (e: T) => T
+  mapFn: (e: T) => T
 ): GQLConnection<T> => {
   const edges = connection.edges.map((edge) => {
-    const node =
-      typeof customFn === 'function' ? customFn(edge.node) : edge.node;
+    const node = typeof mapFn === 'function' ? mapFn(edge.node) : edge.node;
     return { ...edge, node };
   });
   return { ...connection, edges };
+};
+
+/**
+ * Transforma los nodos de la conexion utilizando la función pasada como argumento
+ * @param connection
+ * @param mapFn
+ * @returns
+ */
+export const mapConnectionNodesF = <T>(mapFn: (e: T) => T) => {
+  return (connection: GQLConnection<T>) =>
+    mapConnectionNodes(connection, mapFn);
 };
