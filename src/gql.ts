@@ -150,7 +150,7 @@ export const mapConnectionNodes = <T>(
 };
 
 /**
- * Transforma los nodos de la conexion utilizando la función pasada como argumento
+ * Retorna una funcion que transforma los nodos de la conexion utilizando la función pasada como argumento
  * @param connection
  * @param mapFn
  * @returns

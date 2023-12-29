@@ -1,6 +1,6 @@
 {
   "name": "graphql-client-utilities",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Utilidades para consultas graphql en el navegador",
   "main": "./dist/src/graphqlutilities.js",
   "module": "./dist/src/graphqlutilities.js",
@@ -10,7 +10,9 @@
     "./gql": "./dist/src/gql.js",
     "./types": "./dist/src/types.js"
   },
-  "files": ["dist/src"],
+  "files": [
+    "dist/src"
+  ],
   "scripts": {
     "tsc": "tsc",
     "test": "jest",
@@ -42,7 +44,6 @@
     "webpack-dev-server": "^4.11.1",
     "webpack-node-externals": "^3.0.0"
   },
- 
   "author": "",
   "license": "ISC"
 }

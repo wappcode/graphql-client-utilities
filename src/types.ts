@@ -48,6 +48,9 @@ export enum GQLFIlterOperator {
   NOT_LIKE = 'NOT_LIKE',
   IN = 'IN',
   NOT_IN = 'NOT_IN',
+  DIFFERENT = 'DIFFERENT',
+  IS_NULL = 'IS_NULL',
+  IS_NOT_NULL = 'IS_NOT_NULL',
 }
 
 export interface GQLFilterValue {
