@@ -160,7 +160,9 @@ export const mapConnectionNodesF = <T>(mapFn: (e: T) => T) => {
     mapConnectionNodes(connection, mapFn);
 };
 
-export const throwGQLErrors = <T, E>(result: GQLResult): GQLResult<T, E> => {
+export const throwGQLErrors = <T, E>(
+  result: GQLResult<T, E>
+): GQLResult<T, E> => {
   if (result.errors) {
     throw result.errors;
   }
