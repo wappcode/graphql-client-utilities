@@ -1,6 +1,6 @@
 {
   "name": "graphql-client-utilities",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Utilidades para consultas graphql en el navegador",
   "main": "./dist/src/graphqlutilities.js",
   "module": "./dist/src/graphqlutilities.js",
