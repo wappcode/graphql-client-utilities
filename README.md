@@ -134,6 +134,21 @@ Parámetros
     //output  [{date: [object]},{date: [object]}]
 ```
 
+### throwGQLErrors
+
+Lanza una excepción si hay algun error en la consulta Graphql
+
+Parámetros
+
+- result: GQLResult Resultado de la consulta GQL
+
+```
+ const queryConnection = gqlparse` query {....}`
+    const connectionData  = await executor(queryConnection)
+    .then(throwGQLErrors)
+    ...
+```
+
 ## Tipos definidos para
 
 ```
