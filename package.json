@@ -1,6 +1,6 @@
 {
   "name": "graphql-client-utilities",
-  "private": true,
+  "private": false,
   "version": "0.1.5",
   "description": "Utilidades para consultas graphql en el navegador",
   "main": "./dist/src/graphql-client-utilities.umd.cjs",
