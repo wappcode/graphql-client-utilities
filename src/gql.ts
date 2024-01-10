@@ -10,7 +10,7 @@ import {
   GQLFetchFunction
 } from './types';
 
-const extractOperationName = (query: string): string => {
+const extractOperationName = (query: string): string | undefined => {
   let queryBase = query.replace('query', '');
   queryBase = queryBase.replace('mutation', '');
   queryBase = queryBase.replace('fragment', '');
@@ -18,7 +18,11 @@ const extractOperationName = (query: string): string => {
   const regexp = new RegExp(/^(\w+)[\s({}]/);
   const matches = regexp.exec(queryBase) ?? [];
   const operationName = matches[1] ?? '';
-  return operationName.trim();
+  if (typeof operationName == 'string' && operationName.trim().length > 0) {
+    return operationName.trim();
+  } else {
+    return undefined;
+  }
 };
 
 export const queryDataToQueryObject = (data: GQLQueryData): GQLQueryObject => {
@@ -96,7 +100,7 @@ export const executeQuery = <T = unknown, V = unknown, E = unknown>(
   headers = { ...headers, 'Content-Type': 'application/json' };
   options = { ...options, headers, body: JSON.stringify(body) };
 
-  return fetchFn(url, options).then((response: any) => response.json());
+  return fetchFn(url, options).then((response) => response.json());
 };
 
 /**
@@ -154,4 +158,16 @@ export const throwGQLErrors = <T, E>(result: GQLResult<T, E>): GQLResult<T, E> =
     throw result.errors;
   }
   return result;
+};
+
+export const objectToResponse = (
+  data: unknown,
+  status: number = 200,
+  statusText: string = 'Ok'
+): Response => {
+  const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+
+  const init = { status, statusText };
+  const response = new Response(blob, init);
+  return response;
 };

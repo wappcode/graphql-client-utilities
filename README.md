@@ -245,3 +245,105 @@ joins?: GQLJoinInput[];
 }
 
 ```
+
+## Integración con angular
+
+- Importar o inicializar provider HttpClientModule para módulos o provideHttpClient(withFetch()) para standalone component
+- Crear el servicio
+
+ng g s services/query-executor
+
+```
+// services/query-executor.service.ts
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import {
+  createQueryExecutor,
+  GQLFetchFunction,
+  GQLQueryData,
+  GQLResult,
+  objectToResponse,
+} from 'graphql-client-utilities';
+import { firstValueFrom, from, Observable, tap } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class QueryExecutorService {
+  constructor(private http: HttpClient) {}
+  createExecutor() {
+    const fetchFn: GQLFetchFunction = (
+      url: RequestInfo | URL,
+      init?: RequestInit | undefined
+    ): Promise<Response> => {
+      const body = init?.body;
+      const observable$ = this.http.post(url as string, body);
+      return firstValueFrom(observable$).then((result) =>
+        objectToResponse(result)
+      );
+    };
+    const queryExecutor = createQueryExecutor(
+      'http://localhost:8080/api',
+      fetchFn
+    );
+    return queryExecutor;
+  }
+
+  execute<T = unknown, V = unknown, E = unknown>(
+    query: GQLQueryData,
+    vars?: V
+  ): Observable<GQLResult<T, E>> {
+    const queryExecutor = this.createExecutor();
+    return from(queryExecutor<T, V, E>(query, vars));
+  }
+}
+
+```
+
+- ejecutar un query en el componente
+
+```
+
+import { QueryExecutorService } from './services/query-executor.service';
+import {queryExecutor, gqlparse} from 'graphql-client-utilities';
+import { from, map, tap } from 'rxjs';
+// importar provider en le componente o módulo
+
+
+.....
+
+    constructor(private: queryExecutor: QueryExecutorService){
+
+    }
+    // ejecutar un query
+
+      const query = gqlparse`
+        query QueryEcho($message:String!){
+          echo(message:$message)
+        }
+        `;
+    this.queryExecutor
+      .execute<{ echo: string }>(query,{message:"hola mundo"})
+      .pipe(
+        map((result) => result.data.echo + ' awesome!'),
+        tap((result) => console.log(result))
+        // ... realizar los procesos con los datos tap, map, etc
+      )
+      .subscribe();
+
+
+    // o alternativamente de la siguiente forma
+
+    const queryExecutor = this.queryExecutor.createExecutor();
+
+    from(queryExecutor<{echo:string}>(query,{message:"hola mundo"})).pipe(
+        map((result) => result.data.echo + ' awesome!'),
+        tap((result) => console.log(result))
+        // ... realizar los procesos con los datos tap, map, etc
+    ).subscribe();
+
+.....
+
+
+
+```

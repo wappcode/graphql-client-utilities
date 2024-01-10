@@ -112,7 +112,7 @@ export type QueryExecutor = <T = unknown, V = unknown, E = unknown>(
   variables?: V
 ) => Promise<GQLResult<T, E>>;
 
-export type GQLFetchFunction = <T>(
+export type GQLFetchFunction = (
   input: RequestInfo | URL,
   init?: RequestInit | undefined
-) => Promise<T>;
+) => Promise<Response>;
