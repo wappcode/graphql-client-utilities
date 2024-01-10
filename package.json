@@ -21,7 +21,7 @@
   ],
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "rm -r dist && tsc && vite build",
     "preview": "vite preview",
     "test": "vitest",
     "lint": "prettier --plugin-search-dir . --check . && eslint .",
