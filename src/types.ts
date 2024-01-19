@@ -61,7 +61,7 @@ export interface GQLFilterConditionInput {
   filterOperator: GQLFIlterOperator;
   property: string;
   value: GQLFilterValue;
-  onJoinedProperty: string;
+  onJoinedProperty?: string;
 }
 export interface GQLFilterGroupInput {
   groupLogic?: GQLFilterLogic;
@@ -75,7 +75,7 @@ export enum GQLSortDirection {
 export interface GQLSortGroupInput {
   property: string;
   direction?: GQLSortDirection;
-  onJoinedProperty: string;
+  onJoinedProperty?: string;
 }
 export enum GQLJoinType {
   INNER = 'INNER',
@@ -86,8 +86,8 @@ export enum GQLJoinType {
 export interface GQLJoinInput {
   property: string;
   joinType: GQLJoinType;
-  joinedProperty: string;
-  alias: string;
+  joinedProperty?: string;
+  alias?: string;
 }
 
 export interface GQLConnectionInput {
