@@ -69,8 +69,8 @@ export interface GQLFilterGroupInput {
   conditions: GQLFilterConditionInput;
 }
 export enum GQLSortDirection {
-  ASC = 'ASC',
-  DESC = 'DESC'
+  ASC = 'asc',
+  DESC = 'desc'
 }
 export interface GQLSortGroupInput {
   property: string;
