@@ -72,9 +72,10 @@ export enum GQLSortDirection {
   ASC = 'asc',
   DESC = 'desc'
 }
+export type GQLSortDirectionType = 'ASC' | 'DESC' | 'asc' | 'desc';
 export interface GQLSortGroupInput {
   property: string;
-  direction?: GQLSortDirection;
+  direction?: GQLSortDirection | GQLSortDirectionType;
   onJoinedProperty?: string;
 }
 export enum GQLJoinType {
