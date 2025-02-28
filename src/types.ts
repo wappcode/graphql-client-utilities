@@ -97,6 +97,11 @@ export interface GQLConnectionInput {
   sorts?: GQLSortGroupInput[];
   joins?: GQLJoinInput[];
 }
+export interface GQLListInput {
+  filters?: GQLFilterGroupInput[];
+  sorts?: GQLSortGroupInput[];
+  joins?: GQLJoinInput[];
+}
 /**
  * @template T Tipo de resultado de la consulta.
  * @template E Tipo de error de la consulta.

@@ -243,6 +243,11 @@ filters?: GQLFilterGroupInput[];
 sorts?: GQLSortGroupInput[];
 joins?: GQLJoinInput[];
 }
+GQLListInput {
+filters?: GQLFilterGroupInput[];
+sorts?: GQLSortGroupInput[];
+joins?: GQLJoinInput[];
+}
 
 ```
 
