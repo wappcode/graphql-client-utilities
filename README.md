@@ -207,11 +207,18 @@ value: GQLFilterValue;
 onJoinedProperty: string;
 }
 
+GQLFilterCompoundConditionInput {
+  conditionsLogic?: GQLFilterLogic;
+  conditions?: GQLFilterConditionInput[];
+  compoundConditions?: GQLFilterCompoundConditionInput[];
+}
 GQLFilterGroupInput {
 groupLogic?: GQLFilterLogic;
 conditionsLogic?: GQLFilterLogic;
-conditions: GQLFilterConditionInput;
+conditions?: GQLFilterConditionInput[];
+compoundConditions?: GQLFilterCompoundConditionInput[];
 }
+
 GQLSortDirection {
 ASC = 'ASC',
 DESC = 'DESC',

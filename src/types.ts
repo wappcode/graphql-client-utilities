@@ -63,10 +63,16 @@ export interface GQLFilterConditionInput {
   value: GQLFilterValue;
   onJoinedProperty?: string;
 }
+export interface GQLFilterCompoundConditionInput {
+  conditionsLogic?: GQLFilterLogic;
+  conditions?: GQLFilterConditionInput[];
+  compoundConditions?: GQLFilterCompoundConditionInput[];
+}
 export interface GQLFilterGroupInput {
   groupLogic?: GQLFilterLogic;
   conditionsLogic?: GQLFilterLogic;
-  conditions: GQLFilterConditionInput[];
+  conditions?: GQLFilterConditionInput[];
+  compoundConditions?: GQLFilterCompoundConditionInput[];
 }
 export enum GQLSortDirection {
   ASC = 'asc',
